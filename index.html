@@ -37,14 +37,16 @@
     }
 
     function pushRowToItemVisualiser(row) {
+      ItemVisualiser.catalog_items.push(serializeItem(row));
+    }
+
+    function serializeItem(row) {
       const latestImageUrl = rowImageUrl(row);
 
-      ItemVisualiser.catalog_items.push(
-        {
-          id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
-          image_url: latestImageUrl
-        }
-      );
+      return {
+        id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
+        image_url: latestImageUrl
+      }
     }
 
     function getRandomImage() {
@@ -66,17 +68,9 @@
             });
           } else {
             const row = selection[0]
-            const latestImageUrl = ImageUrl(
-              extractImageId(row.gsx$coverimage.$t)
-            );
 
             ItemVisualiser.catalog_items.pop();
-            ItemVisualiser.catalog_items.unshift(
-              {
-                id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
-                image_url: latestImageUrl
-              }
-            );
+            ItemVisualiser.catalog_items.unshift(serializeItem(row));
           }
         } else {
           console.log("Hit the target URL, but error returned.");
