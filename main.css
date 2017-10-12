@@ -1,0 +1,14 @@
+body {
+  background: #000;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 20%;
+  grid-gap: 1rem;
+}
+
+img {
+  max-width: 100%;
+  transform: rotate(90deg);
+}

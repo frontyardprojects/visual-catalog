@@ -1,0 +1,97 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontyard Ephemera Collection</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://unpkg.com/vue"></script>
+  </head>
+  <body>
+    <main id="catalog">
+      <catalog-item
+        v-for="item in catalog_items"
+        v-bind:book="item"
+        v-bind:key="item.id">
+      </catalog-item>
+    </main>
+  </body>
+  <script>
+    'use strict';
+
+    function ImageUrl(id) {
+      return "https://drive.google.com/uc?export=download&id=" + id;
+    }
+
+    function extractImageId(file_url) {
+      return file_url.split("=")[1];
+    }
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    }
+
+    function pushRowToItemVisualiser(row) {
+      const latestImageUrl = ImageUrl(
+        extractImageId(row.gsx$coverimage.$t)
+      );
+
+      ItemVisualiser.catalog_items.push(
+        {
+          id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
+          image_url: latestImageUrl
+        }
+      );
+    }
+
+    function getRandomImage() {
+      // get the data
+      var sheetJsonUrl = "https://spreadsheets.google.com/feeds/list/1ipWHrciUS_b1kYWEJokNGVrDaTJsYS1LfpWY-nX0jag/1/public/full?alt=json";
+      const request = new XMLHttpRequest();
+      request.open("GET", sheetJsonUrl, true);
+
+      request.onload = function() {
+        if (request.status >= 200 && request.status < 400) {
+          console.log("Request was a success!");
+          const masterData = JSON.parse(request.responseText);
+          const rows = masterData.feed.entry;
+
+          // for the latest row get the image
+          const randomIndex = getRandomInt(0, rows.length);
+
+          const selection = rows.slice(rows.length - 20).reverse();
+
+          selection.forEach(function(row) {
+            pushRowToItemVisualiser(row);
+          });
+
+          var data = ItemVisualiser.catalog_items;
+        } else {
+          console.log("Hit the target URL, but error returned.");
+        }
+      };
+
+      request.onerror = function() {
+        console.log("There was an error in the request, it didn't make the target.");
+      };
+
+      request.send();
+    }
+
+    Vue.component('catalog-item', {
+      props: ['book'],
+      template: '<img :src="book.image_url" />'
+    })
+
+    var ItemVisualiser = new Vue({
+      el: '#catalog',
+      data: {
+        catalog_items: [ ]
+      }
+    })
+
+    getRandomImage();
+    // window.setInterval(getRandomImage, 5000);
+  </script>
+</html>
