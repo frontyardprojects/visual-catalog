@@ -42,7 +42,7 @@
 
     function serializeItem(row) {
       return {
-        id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
+        id: extractImageId(row.gsx$coverimage.$t),
         image_url: rowImageUrl(row)
       }
     }
