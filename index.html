@@ -41,11 +41,9 @@
     }
 
     function serializeItem(row) {
-      const latestImageUrl = rowImageUrl(row);
-
       return {
         id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
-        image_url: latestImageUrl
+        image_url: rowImageUrl(row)
       }
     }
 
