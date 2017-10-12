@@ -60,9 +60,24 @@
           const rows = masterData.feed.entry;
           const selection = rows.slice(rows.length - 20).reverse();
 
-          selection.forEach(function(row) {
-            pushRowToItemVisualiser(row);
-          });
+          if (ItemVisualiser.catalog_items.length == 0) {
+            selection.forEach(function(row) {
+              pushRowToItemVisualiser(row);
+            });
+          } else {
+            const row = selection[0]
+            const latestImageUrl = ImageUrl(
+              extractImageId(row.gsx$coverimage.$t)
+            );
+
+            ItemVisualiser.catalog_items.pop();
+            ItemVisualiser.catalog_items.unshift(
+              {
+                id: extractImageId(extractImageId(row.gsx$coverimage.$t)),
+                image_url: latestImageUrl
+              }
+            );
+          }
         } else {
           console.log("Hit the target URL, but error returned.");
         }
