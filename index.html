@@ -32,10 +32,12 @@
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 
+    function rowImageUrl(row) {
+      return ImageUrl(extractImageId(row.gsx$coverimage.$t));
+    }
+
     function pushRowToItemVisualiser(row) {
-      const latestImageUrl = ImageUrl(
-        extractImageId(row.gsx$coverimage.$t)
-      );
+      const latestImageUrl = rowImageUrl(row);
 
       ItemVisualiser.catalog_items.push(
         {
