@@ -56,17 +56,11 @@
           console.log("Request was a success!");
           const masterData = JSON.parse(request.responseText);
           const rows = masterData.feed.entry;
-
-          // for the latest row get the image
-          const randomIndex = getRandomInt(0, rows.length);
-
           const selection = rows.slice(rows.length - 20).reverse();
 
           selection.forEach(function(row) {
             pushRowToItemVisualiser(row);
           });
-
-          var data = ItemVisualiser.catalog_items;
         } else {
           console.log("Hit the target URL, but error returned.");
         }
