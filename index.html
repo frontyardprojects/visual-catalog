@@ -86,6 +86,7 @@
     })
 
     getRandomImage();
-    // window.setInterval(getRandomImage, 5000);
+    // This shouldn't make a new request until the previous has finished
+    window.setInterval(getRandomImage, 10000);
   </script>
 </html>
