@@ -67,8 +67,11 @@
           } else {
             const row = selection[0]
 
-            ItemVisualiser.catalog_items.pop();
-            ItemVisualiser.catalog_items.unshift(serializeItem(row));
+            // if the latest item is still the newest contribtion, skip
+            if (ItemVisualiser.catalog_items[0].id !== extractImageId(row.gsx$coverimage.$t)) {
+              ItemVisualiser.catalog_items.pop();
+              ItemVisualiser.catalog_items.unshift(serializeItem(row));
+            }
           }
         } else {
           console.log("Hit the target URL, but error returned.");
