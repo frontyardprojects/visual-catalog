@@ -1,14 +1,30 @@
 body {
   background: #000;
+  margin: .9em;
 }
 
 main {
   display: grid;
-  grid-template-columns: 20%;
-  grid-gap: 1rem;
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-auto-rows: 20em;
+  grid-gap: 1em;
+  width: 100%;
+  grid-auto-flow: row;
+}
+
+div {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+div:first-child {
+  grid-row-start: span 2;
+  grid-column-start: span 2;
 }
 
 img {
-  max-width: 100%;
+  height: 100%;
   transform: rotate(90deg);
 }

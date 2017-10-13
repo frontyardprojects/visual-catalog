@@ -86,7 +86,7 @@
 
     Vue.component('catalog-item', {
       props: ['book'],
-      template: '<img :src="book.image_url" />'
+      template: '<div><img :src="book.image_url" /></div>'
     })
 
     var ItemVisualiser = new Vue({
