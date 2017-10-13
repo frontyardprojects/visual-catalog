@@ -14,90 +14,90 @@
         v-bind:key="item.id">
       </catalog-item>
     </main>
-  </body>
-  <script>
-    'use strict';
+    <script>
+      'use strict';
 
-    function ImageUrl(id) {
-      return "https://drive.google.com/uc?export=download&id=" + id;
-    }
-
-    function extractImageId(file_url) {
-      return file_url.split("=")[1];
-    }
-
-    function getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-    }
-
-    function rowImageUrl(row) {
-      return ImageUrl(extractImageId(row.gsx$coverimage.$t));
-    }
-
-    function pushRowToItemVisualiser(row) {
-      ItemVisualiser.catalog_items.push(serializeItem(row));
-    }
-
-    function serializeItem(row) {
-      return {
-        id: extractImageId(row.gsx$coverimage.$t),
-        image_url: rowImageUrl(row)
+      function ImageUrl(id) {
+        return "https://drive.google.com/uc?export=download&id=" + id;
       }
-    }
 
-    function getRandomImage() {
-      // get the data
-      var sheetJsonUrl = "https://spreadsheets.google.com/feeds/list/1ipWHrciUS_b1kYWEJokNGVrDaTJsYS1LfpWY-nX0jag/1/public/full?alt=json";
-      const request = new XMLHttpRequest();
-      request.open("GET", sheetJsonUrl, true);
+      function extractImageId(file_url) {
+        return file_url.split("=")[1];
+      }
 
-      request.onload = function() {
-        if (request.status >= 200 && request.status < 400) {
-          console.log("Request was a success!");
-          const rows = JSON.parse(request.responseText).feed.entry;
-          const selection = rows.slice(rows.length - 20).reverse();
+      function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+      }
 
-          if (ItemVisualiser.catalog_items.length == 0) {
-            selection.forEach(function(row) {
-              pushRowToItemVisualiser(row);
-            });
-          } else {
-            const row = selection[0]
+      function rowImageUrl(row) {
+        return ImageUrl(extractImageId(row.gsx$coverimage.$t));
+      }
 
-            // if the latest item is still the newest contribtion, skip
-            if (ItemVisualiser.catalog_items[0].id !== extractImageId(row.gsx$coverimage.$t)) {
-              ItemVisualiser.catalog_items.pop();
-              ItemVisualiser.catalog_items.unshift(serializeItem(row));
-            }
-          }
-        } else {
-          console.log("Hit the target URL, but error returned.");
+      function pushRowToItemVisualiser(row) {
+        ItemVisualiser.catalog_items.push(serializeItem(row));
+      }
+
+      function serializeItem(row) {
+        return {
+          id: extractImageId(row.gsx$coverimage.$t),
+          image_url: rowImageUrl(row)
         }
-      };
-
-      request.onerror = function() {
-        console.log("There was an error in the request, it didn't make the target.");
-      };
-
-      request.send();
-    }
-
-    Vue.component('catalog-item', {
-      props: ['book'],
-      template: '<div><img :src="book.image_url" /></div>'
-    })
-
-    var ItemVisualiser = new Vue({
-      el: '#catalog',
-      data: {
-        catalog_items: [ ]
       }
-    })
 
-    getRandomImage();
-    // This shouldn't make a new request until the previous has finished
-    window.setInterval(getRandomImage, 30000);
-  </script>
+      function getRandomImage() {
+        // get the data
+        var sheetJsonUrl = "https://spreadsheets.google.com/feeds/list/1ipWHrciUS_b1kYWEJokNGVrDaTJsYS1LfpWY-nX0jag/1/public/full?alt=json";
+        const request = new XMLHttpRequest();
+        request.open("GET", sheetJsonUrl, true);
+
+        request.onload = function() {
+          if (request.status >= 200 && request.status < 400) {
+            console.log("Request was a success!");
+            const rows = JSON.parse(request.responseText).feed.entry;
+            const selection = rows.slice(rows.length - 20).reverse();
+
+            if (ItemVisualiser.catalog_items.length == 0) {
+              selection.forEach(function(row) {
+                pushRowToItemVisualiser(row);
+              });
+            } else {
+              const row = selection[0]
+
+              // if the latest item is still the newest contribtion, skip
+              if (ItemVisualiser.catalog_items[0].id !== extractImageId(row.gsx$coverimage.$t)) {
+                ItemVisualiser.catalog_items.pop();
+                ItemVisualiser.catalog_items.unshift(serializeItem(row));
+              }
+            }
+          } else {
+            console.log("Hit the target URL, but error returned.");
+          }
+        };
+
+        request.onerror = function() {
+          console.log("There was an error in the request, it didn't make the target.");
+        };
+
+        request.send();
+      }
+
+      Vue.component('catalog-item', {
+        props: ['book'],
+        template: '<div><img :src="book.image_url" /></div>'
+      })
+
+      var ItemVisualiser = new Vue({
+        el: '#catalog',
+        data: {
+          catalog_items: [ ]
+        }
+      })
+
+      getRandomImage();
+      // This shouldn't make a new request until the previous has finished
+      window.setInterval(getRandomImage, 30000);
+    </script>
+  </body>
 </html>
