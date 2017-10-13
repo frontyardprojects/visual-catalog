@@ -6,9 +6,10 @@ body {
 main {
   display: grid;
   display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-template-columns: 19% 19% 19% 19% 19%;
   grid-auto-rows: 20em;
-  grid-gap: 1em;
+  grid-row-gap: 1.2em;
+  justify-content: space-between;
   width: 100%;
   grid-auto-flow: row;
 }
@@ -26,5 +27,6 @@ div:first-child {
 
 img {
   height: 100%;
+  height: fit-content;
   transform: rotate(90deg);
 }
